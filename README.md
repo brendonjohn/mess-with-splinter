@@ -13,6 +13,6 @@ Instead of hacking away at the existing regression suite of projects I'm working
 
 To Run
 ======
-python expore_trademe.py
+python explore_trademe.py
 
 Assumes that splinter is running on your python environment
