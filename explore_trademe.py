@@ -1,16 +1,16 @@
 __author__ = 'brendonjohn'
 from splinter import Browser
+from TrademePage import TrademeHome
 
 browser = Browser()
 
 start_url = "http://trademe.co.nz"
 browser.visit(start_url)
 
-search_bar = browser.find_by_name("searchString")
-search_bar[0].value = "redcupexpress"
-browser.select("searchType", "Seller")
-button = browser.find_by_xpath("//button[@value = 'Search']")
-button.click()
+current_page = TrademeHome(browser)
+current_page.set_search_text("redcupexpress")
+current_page.set_search_type("Seller")
+current_page.click_search()
 
 listings = browser.find_by_xpath("//div[@class='listingTitle']")
 listings_number = len(listings)
@@ -34,7 +34,7 @@ for i in range(listings_number):
     else:
         listing_count = 0
 
-    print "Views for '%s': %s" % (listing_title,listing_count)
+    print "Views for '%s': %s" % (listing_title, listing_count)
 
     browser.back()
 
