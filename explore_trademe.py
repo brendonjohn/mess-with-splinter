@@ -1,6 +1,6 @@
 __author__ = 'brendonjohn'
 from splinter import Browser
-from TrademePage import TrademeHome
+from TrademePage import TrademeHome, TrademeResults, TrademeAuction
 
 browser = Browser()
 
@@ -12,30 +12,24 @@ current_page.set_search_text("redcupexpress")
 current_page.set_search_type("Seller")
 current_page.click_search()
 
-listings = browser.find_by_xpath("//div[@class='listingTitle']")
-listings_number = len(listings)
+current_page = TrademeResults(browser)
+listings_number = current_page.count_listings()
 
-listings_count_sum = 0
+total_views = 0
+
 for i in range(listings_number):
+    listings = TrademeResults(browser).listings
+    listings[i].click()
 
-    listings = browser.find_by_xpath("//div[@class='listingTitle']")
-    listings[i].find_by_xpath("./a").first.click()
+    current_page = TrademeAuction(browser)
+    page_views = current_page.get_page_views()
+    total_views += page_views
 
-    # On listing page
-    listing_title = browser.find_by_id("ListingTitle_title").first.text
-
-    counters = browser.find_by_xpath("//div[@id='DetailsFooter_PageViewsPanel']/img")
-    if len(counters) > 0:
-        listing_count = ""
-        for counter in counters:
-            listing_count += counter['alt']
-        listing_count = int(listing_count)
-        listings_count_sum += listing_count
-    else:
-        listing_count = 0
-
-    print "Views for '%s': %s" % (listing_title, listing_count)
+    print "Views for '%s': %s" % (
+        current_page.get_auction_title(),
+        page_views
+    )
 
     browser.back()
 
-print "Total listings views: %s" % (listings_count_sum)
+print "Total listings views: %s" % (total_views)
